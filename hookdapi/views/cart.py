@@ -133,3 +133,12 @@ class CartView(viewsets.ViewSet):
             return Response(
                 {"message": "Order not found"}, status=status.HTTP_404_NOT_FOUND
             )
+
+    @action(methods=["delete"], url_path="clear-cart")
+    def delete(self, request):
+        current_user = Customer.objects.get(user=request.auth.user)
+        open_order = Order.objects.get(customer=current_user, payment=None)
+
+        OrderProduct.objects.filter(order=open_order).delete()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
