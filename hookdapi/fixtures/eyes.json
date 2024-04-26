@@ -1,0 +1,23 @@
+[
+  {
+    "model": "hookdapi.eyes",
+    "pk": 1,
+    "fields": {
+      "name": "felt"
+    }
+  },
+  {
+    "model": "hookdapi.eyes",
+    "pk": 2,
+    "fields": {
+      "name": "safety"
+    }
+  },
+  {
+    "model": "hookdapi.eyes",
+    "pk": 3,
+    "fields": {
+      "name": "embroidered"
+    }
+  }
+]

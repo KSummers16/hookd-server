@@ -1,0 +1,30 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "ryan@ryantanay.com",
+      "password": "pbkdf2_sha256$320000$skKMaZQjJwGMIJO1MmeaoP$68b2U4VFPL1ZQYgYmM7sIJUWPDhKCrAJOrdz4MWnLq4=",
+      "email": "ryan@ryantanay.com",
+      "first_name": "Ryan",
+      "last_name": "Tanay",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2022-10-21T21:15:55.764Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "meg@ducharme.com",
+      "password": "pbkdf2_sha256$320000$6caQGznxTT5xOWckvjT6QO$YZTdqhVzw5XIXUcA2TrQsZuC4SJGBeFc2OYOIz6j8Lk=",
+      "email": "meg@ducharme.com",
+      "first_name": "Meg",
+      "last_name": "Ducharme",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2022-10-21T21:16:33.812Z"
+    }
+  }
+]

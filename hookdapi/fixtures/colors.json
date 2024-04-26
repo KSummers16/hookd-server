@@ -1,0 +1,79 @@
+[
+  {
+    "model": "hookdapi.color",
+    "pk": 1,
+    "fields": {
+      "name": "Red"
+    }
+  },
+  {
+    "model": "hookdapi.color",
+    "pk": 2,
+    "fields": {
+      "name": "Orange"
+    }
+  },
+  {
+    "model": "hookdapi.color",
+    "pk": 3,
+    "fields": {
+      "name": "Yellow"
+    }
+  },
+  {
+    "model": "hookdapi.color",
+    "pk": 4,
+    "fields": {
+      "name": "Green"
+    }
+  },
+  {
+    "model": "hookdapi.color",
+    "pk": 5,
+    "fields": {
+      "name": "Blue"
+    }
+  },
+  {
+    "model": "hookdapi.color",
+    "pk": 6,
+    "fields": {
+      "name": "Indigo"
+    }
+  },
+  {
+    "model": "hookdapi.color",
+    "pk": 7,
+    "fields": {
+      "name": "Violet"
+    }
+  },
+  {
+    "model": "hookdapi.color",
+    "pk": 8,
+    "fields": {
+      "name": "White"
+    }
+  },
+  {
+    "model": "hookdapi.color",
+    "pk": 9,
+    "fields": {
+      "name": "Gray"
+    }
+  },
+  {
+    "model": "hookdapi.color",
+    "pk": 10,
+    "fields": {
+      "name": "Black"
+    }
+  },
+  {
+    "model": "hookdapi.color",
+    "pk": 11,
+    "fields": {
+      "name": "Brown"
+    }
+  }
+]

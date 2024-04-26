@@ -1,0 +1,24 @@
+[
+  {
+    "model": "hookdapi.customer",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "address": "123 Main St",
+      "email_address": "ryan@ryantanay.com",
+      "name": "Ryan Tanay",
+      "is_admin": false
+    }
+  },
+  {
+    "model": "hookdapi.customer",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "address": "456 Oak St",
+      "email_address": "meg@ducharme.com",
+      "name": "Meg Ducharme",
+      "is_admin": true
+    }
+  }
+]

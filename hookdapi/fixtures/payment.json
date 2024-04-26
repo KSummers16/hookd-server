@@ -1,0 +1,13 @@
+[
+  {
+    "model": "hookdapi.payment",
+    "pk": 1,
+    "fields": {
+      "merchant_name": "Visa",
+      "account_number": "24ijio68948fj8439",
+      "customer_id": "2",
+      "expiration_date": "2020-01-01",
+      "create_date": "2019-11-11"
+    }
+  }
+]

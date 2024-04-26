@@ -1,0 +1,57 @@
+[
+  {
+    "model": "hookdapi.cusproduct",
+    "pk": 1,
+    "fields": {
+      "name": "Cosmo",
+      "price": 15,
+      "category": 1,
+      "pattern": "Hanner-Gurumi",
+      "yarn": "Loops & Threads Impeccable"
+    }
+  },
+  {
+    "model": "hookdapi.cusproduct",
+    "pk": 2,
+    "fields": {
+      "name": "Dolphin",
+      "price": 10,
+      "category": 1,
+      "pattern": "AmigurumiDay",
+      "yarn": "Loops & Threads Impeccable"
+    }
+  },
+  {
+    "model": "hookdapi.cusproduct",
+    "pk": 3,
+    "fields": {
+      "name": "Mood Octopus",
+      "price": 20,
+      "category": 1,
+      "pattern": "CraftingHappiness",
+      "yarn": "Loops & Threads Impeccable"
+    }
+  },
+  {
+    "model": "hookdapi.cusproduct",
+    "pk": 4,
+    "fields": {
+      "name": "Turtle",
+      "price": 10,
+      "category": 1,
+      "pattern": "Abigurumi",
+      "yarn": "Loops & Threads Impeccable"
+    }
+  },
+  {
+    "model": "hookdapi.cusproduct",
+    "pk": 5,
+    "fields": {
+      "name": "Axolotl",
+      "price": 10,
+      "category": 1,
+      "pattern": "Unknown",
+      "yarn": "Loops & Threads Impeccable"
+    }
+  }
+]
