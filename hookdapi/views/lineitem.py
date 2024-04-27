@@ -7,9 +7,16 @@ from hookdapi.models import OrderProduct, Order, Customer
 
 
 class CartItemSerializer(serializers.ModelSerializer):
+    rtsproduct_id = serializers.PrimaryKeyRelatedField(
+        source="rtsproduct", read_only=True
+    )
+    cusrequest_id = serializers.PrimaryKeyRelatedField(
+        source="cusrequest", read_only=True
+    )
+
     class Meta:
         model = OrderProduct
-        fields = ["id", "rts_product", "cus_request", "quantity"]
+        fields = ["id", "rtsproduct_id", "cusrequest_id"]
 
 
 class CartItem(ViewSet):
@@ -26,3 +33,17 @@ class CartItem(ViewSet):
 
         except OrderProduct.DoesNotExist as ex:
             return Response({"message": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk=None):
+        try:
+            customer = Customer.objects.get(user=request.auth.user)
+            order_product = OrderProduct.objects.get(pk=pk, order__customer=customer)
+            order_product.delete()
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        except OrderProduct.DoesNotExist as ex:
+            return Response({"message": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return Response(
+                {"message": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

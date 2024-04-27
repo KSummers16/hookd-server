@@ -10,3 +10,4 @@ from .lineitem import CartItemSerializer
 from .cart import CartView
 from .cusrequest import CusRequestSerializer
 from .payment import Payments
+from .lineitem import CartItem
