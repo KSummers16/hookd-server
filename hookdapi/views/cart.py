@@ -98,20 +98,11 @@ class CartView(viewsets.ViewSet):
             )
 
         order_products = OrderProduct.objects.filter(order=open_order)
-        rts_products_on_order = [
-            op.rtsproduct for op in order_products if op.rtsproduct
-        ]
-        cus_requests_on_order = [
-            op.cusrequest for op in order_products if op.cusrequest is not None
-        ]
-
-        rts_product_serializer = RTSProductSerializer(rts_products_on_order, many=True)
-        cus_request_serializer = CusRequestSerializer(cus_requests_on_order, many=True)
+        order_product_serializer = CartItemSerializer(order_products, many=True)
 
         cart_data = {
             "order_id": open_order.id,
-            "rts_products": rts_product_serializer.data,
-            "cus_requests": cus_request_serializer.data,
+            "order_products": order_product_serializer.data,
         }
 
         return Response(cart_data)
@@ -134,7 +125,7 @@ class CartView(viewsets.ViewSet):
                 {"message": "Order not found"}, status=status.HTTP_404_NOT_FOUND
             )
 
-    @action(methods=["delete"], url_path="clear-cart")
+    @action(methods=["delete"], url_path="clear-cart", detail=False)
     def delete(self, request):
         current_user = Customer.objects.get(user=request.auth.user)
         open_order = Order.objects.get(customer=current_user, payment=None)
