@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from hookdapi.models import OrderProduct, Order, Customer
+from .rtsproduct import RTSProductSerializer
+from .cusrequest import CusRequestSerializer
 
 
 class CartItemSerializer(serializers.ModelSerializer):
@@ -17,6 +19,14 @@ class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderProduct
         fields = ["id", "rtsproduct_id", "cusrequest_id"]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if instance.rtsproduct:
+            data["rtsproduct"] = RTSProductSerializer(instance.rtsproduct).data
+        if instance.cusrequest:
+            data["cusrequest"] = CusRequestSerializer(instance.cusrequest).data
+        return data
 
 
 class CartItem(ViewSet):

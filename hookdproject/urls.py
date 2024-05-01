@@ -17,6 +17,7 @@ router.register(r"cartitem", CartItem, "cartitem")
 router.register(r"customer", CustomersView, "customer")
 router.register(r"cart", CartView, "cart")
 router.register(r"payments", Payments, "payments")
+router.register(r"cusrequests", CusRequestView, "cusrequests")
 
 
 urlpatterns = [

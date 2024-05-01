@@ -8,6 +8,6 @@ from .category import CategoriesView
 from .orders import OrdersView
 from .lineitem import CartItemSerializer
 from .cart import CartView
-from .cusrequest import CusRequestSerializer
+from .cusrequest import CusRequestSerializer, CusRequestView
 from .payment import Payments
 from .lineitem import CartItem
