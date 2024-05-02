@@ -19,5 +19,12 @@
     "fields": {
       "name": "embroidered"
     }
+  },
+  {
+    "model": "hookdapi.eyes",
+    "pk": 4,
+    "fields": {
+      "name": "No Eyes Needed"
+    }
   }
 ]
