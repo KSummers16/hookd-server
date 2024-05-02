@@ -6,6 +6,7 @@
       "name": "Cosmo",
       "price": 15,
       "category": 1,
+      "eyes": 1,
       "pattern": "Hanner-Gurumi",
       "yarn": "Loops & Threads Impeccable"
     }
@@ -17,6 +18,7 @@
       "name": "Dolphin",
       "price": 10,
       "category": 1,
+      "eyes": 2,
       "pattern": "AmigurumiDay",
       "yarn": "Loops & Threads Impeccable"
     }
@@ -28,6 +30,7 @@
       "name": "Mood Octopus",
       "price": 20,
       "category": 1,
+      "eyes": 3,
       "pattern": "CraftingHappiness",
       "yarn": "Loops & Threads Impeccable"
     }
@@ -39,6 +42,7 @@
       "name": "Turtle",
       "price": 10,
       "category": 1,
+      "eyes": 2,
       "pattern": "Abigurumi",
       "yarn": "Loops & Threads Impeccable"
     }
@@ -50,7 +54,18 @@
       "name": "Axolotl",
       "price": 10,
       "category": 1,
+      "eyes": 2,
       "pattern": "Unknown",
+      "yarn": "Loops & Threads Impeccable"
+    }
+  },
+  {
+    "model": "hookdapi.cusproduct",
+    "pk": 6,
+    "fields": {
+      "name": "Scarf",
+      "price": 30,
+      "category": 2,
       "yarn": "Loops & Threads Impeccable"
     }
   }

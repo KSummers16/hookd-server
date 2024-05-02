@@ -10,4 +10,4 @@ from .OrderProduct import OrderProduct
 from .Cart import Cart
 from .CusRequest import CusRequest
 from .Eyes import Eyes
-from .ProductCategory import ProductCategory
+from .Category import Category
