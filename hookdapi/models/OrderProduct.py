@@ -1,6 +1,6 @@
 from django.db import models
 from .Order import Order
-from .RTSproducts import RTSProduct
+from .RTSProducts import RTSProduct
 from .CusRequest import CusRequest
 
 

@@ -19,7 +19,7 @@ class RTSProductSerializer(serializers.ModelSerializer):
             "price",
             "description",
             "category",
-            "image_path",
+            "image",
             "eyes",
             "pattern",
             "yarn",

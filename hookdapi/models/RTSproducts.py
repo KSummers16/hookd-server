@@ -12,10 +12,4 @@ class RTSProduct(models.Model):
     pattern = models.CharField(max_length=255, null=True)
     yarn = models.CharField(max_length=255)
     eyes = models.ForeignKey(Eyes, on_delete=models.DO_NOTHING, null=True)
-    image_path = models.ImageField(
-        upload_to="rtsproducts",
-        height_field=None,
-        width_field=None,
-        max_length=None,
-        null=True,
-    )
+    image = models.ImageField(upload_to="rtsimages/", blank=True, null=True)

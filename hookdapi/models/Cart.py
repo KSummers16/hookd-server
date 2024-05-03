@@ -1,5 +1,5 @@
 from django.db import models
-from .RTSproducts import RTSProduct
+from .RTSProducts import RTSProduct
 from .CusRequest import CusRequest
 from .Customer import Customer
 

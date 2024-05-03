@@ -7,14 +7,11 @@ from hookdapi.models import Customer
 from django.contrib.auth.decorators import login_required
 
 
-class CustomerSerializer(serializers.HyperlinkedModelSerializer):
+class CustomerSerializer(serializers.ModelSerializer):
     """JSON serializer for customers"""
 
     class Meta:
         model = Customer
-        url = serializers.HyperlinkedIdentityField(
-            view_name="customer", lookup_field="id"
-        )
         fields = ("id", "user", "email_address", "address", "is_admin")
         depth = 1
 
@@ -38,3 +35,13 @@ class CustomersView(ViewSet):
         customer.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+    def retrieve(self, request, pk=None):
+        try:
+            customer = Customer.objects.get(user=request.user)
+            serializer = CustomerSerializer(customer, context={"request": request})
+            return Response(serializer.data)
+        except Customer.DoesNotExist:
+            return HttpResponseServerError(
+                "Customer not found", status=status.HTTP_404_NOT_FOUND
+            )

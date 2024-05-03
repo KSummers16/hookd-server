@@ -1,4 +1,4 @@
-from .RTSproducts import RTSProduct
+from .RTSProducts import RTSProduct
 from .Eyes import Eyes
 from .Category import Category
 from .Colors import Color
@@ -9,5 +9,4 @@ from .CusProducts import CusProduct
 from .OrderProduct import OrderProduct
 from .Cart import Cart
 from .CusRequest import CusRequest
-from .Eyes import Eyes
 from .Category import Category
