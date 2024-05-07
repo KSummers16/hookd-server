@@ -17,7 +17,7 @@ class CusProductSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "price",
-            "image_path",
+            "image",
             "eyes",
             "category",
             "pattern",

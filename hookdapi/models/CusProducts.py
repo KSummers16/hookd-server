@@ -7,7 +7,7 @@ from .Eyes import Eyes
 class CusProduct(models.Model):
     name = models.CharField(max_length=100)
     price = models.IntegerField()
-    image_path = models.CharField(max_length=255)
+    image = models.CharField(max_length=255, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     pattern = models.CharField(max_length=100)
     yarn = models.CharField(max_length=100)

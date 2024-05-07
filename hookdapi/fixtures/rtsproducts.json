@@ -3,11 +3,11 @@
     "model": "hookdapi.rtsproduct",
     "pk": 1,
     "fields": {
-      "name": "Cosmo",
+      "name": "Orange Cosmo",
       "price": 15,
       "description": "Embark on an intergalactic adventure with our handcrafted Cosmo. Each little extraterrestrial is lovingly crafted with vibrant, soft yarn, making them both huggable and out-of-this-world cute!",
       "eyes": 1,
-      "image": "rtsimages/Cosmo.jpeg",
+      "image": "https://res.cloudinary.com/yarn-stash/image/upload/v1714961537/IMG_1562_bgzlwv.jpg",
       "category": 1,
       "pattern": "Hanner-Gurumi",
       "yarn": "Loops & Threads Impeccable"
@@ -17,10 +17,11 @@
     "model": "hookdapi.rtsproduct",
     "pk": 2,
     "fields": {
-      "name": "Dolphin",
+      "name": "Gray Dolphin",
       "price": 10,
       "description": "Dive into the magic of the ocean with our enchanting Crochet Dolphin! Handcrafted with soft yarn, this adorable plushie brings the joy and wonder of marine life right into your arms. Perfect for ocean lovers of all ages!",
       "eyes": 2,
+      "image": "https://res.cloudinary.com/yarn-stash/image/upload/v1715006616/GrayDolphin_q9mk2q.jpg",
       "category": 1,
       "pattern": "AmigurumiDay",
       "yarn": "Loops & Threads Impeccable"
@@ -30,10 +31,11 @@
     "model": "hookdapi.rtsproduct",
     "pk": 3,
     "fields": {
-      "name": "Mood Octopus",
+      "name": "Orange/White Mood Octopus",
       "price": 20,
       "description": "Experience double the delight with our Mood Octopus! Flip between its vibrant colors to match your mood, whether you're feeling sunny and bright or cool and calm. Handcrafted with love and adorned with cheerful tentacles, it's the perfect cuddly companion for expressing your ever-changing emotions. ",
       "eyes": 3,
+      "image": "https://res.cloudinary.com/yarn-stash/image/upload/v1715006759/OrangeOcto_n9mwgs.jpg",
       "category": 1,
       "pattern": "CraftingHappiness",
       "yarn": "Loops & Threads Impeccable"
@@ -41,36 +43,11 @@
   },
   {
     "model": "hookdapi.rtsproduct",
-    "pk": 4,
-    "fields": {
-      "name": "Turtle",
-      "price": 10,
-      "description": "Embark on a slow and steady journey with our Crochet Turtle! Handcrafted with intricate detail, this adorable stuffie is the perfect companion for those who appreciate the tranquility of the sea. Let its gentle presence bring a sense of peace and serenity to your day.",
-      "eyes": 2,
-      "category": 1,
-      "pattern": "Abigurumi",
-      "yarn": "Loops & Threads Impeccable"
-    }
-  },
-  {
-    "model": "hookdapi.rtsproduct",
-    "pk": 5,
-    "fields": {
-      "name": "Axolotl",
-      "price": 10,
-      "description": "Dive into whimsical wonder with our Crochet Axolotl! Crafted with colorful yarn and adorned with its signature frilly gills, this adorable stuffie captures the charm of these unique amphibians. Whether perched on your desk or nestled in your arms, let this axolotl bring a splash of joy to your day.",
-      "eyes": 2,
-      "category": 1,
-      "pattern": "Unknown",
-      "yarn": "Loops & Threads Impeccable"
-    }
-  },
-  {
-    "model": "hookdapi.rtsproduct",
     "pk": 6,
     "fields": {
-      "name": "Hat",
+      "name": "Rainbow Hat",
       "price": 20,
+      "image": "https://res.cloudinary.com/yarn-stash/image/upload/v1715006755/RainbowHat_fl7u1n.jpg",
       "category": 2,
       "description": "Keeps your head warm and looking stylish!",
       "yarn": "Loops & Threads Impeccable"
@@ -80,8 +57,9 @@
     "model": "hookdapi.rtsproduct",
     "pk": 7,
     "fields": {
-      "name": "Scarf",
+      "name": "Two-Tone Gray Scarf",
       "price": 30,
+      "image": "https://res.cloudinary.com/yarn-stash/image/upload/v1715006764/GrayScarf_aauvei.jpg",
       "category": 2,
       "description": "Keeps you warm and looking stylish!",
       "yarn": "Loops & Threads Impeccable"

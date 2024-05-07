@@ -55,9 +55,15 @@ class RTSProductsView(ViewSet):
             new_rtsproduct.name = request.data["name"]
             new_rtsproduct.price = request.data["price"]
             new_rtsproduct.description = request.data["description"]
-            new_rtsproduct.category = Category.objects.get(
-                pk=request.data["category_id"]
-            )
+            category_id = request.data.get("category_id")
+            if category_id is not None:
+                try:
+                    new_rtsproduct.category = Category.objects.get(pk=category_id)
+                except Category.DoesNotExist:
+                    return Response(
+                        {"error": "Invalid category_id"},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
 
             eyes_id = request.data.get("eyes_id")
             if eyes_id is not None:
@@ -71,6 +77,7 @@ class RTSProductsView(ViewSet):
                 new_rtsproduct.eyes = None
             new_rtsproduct.pattern = request.data["pattern"]
             new_rtsproduct.yarn = request.data["yarn"]
+            new_rtsproduct.image = request.data["image"]
 
             if "image_path" in request.data:
                 format, imgstr = request.data["image_path"].split(";base64,")
