@@ -79,17 +79,24 @@ class RTSProductsView(ViewSet):
             new_rtsproduct.yarn = request.data["yarn"]
             new_rtsproduct.image = request.data["image"]
 
-            if "image_path" in request.data:
-                format, imgstr = request.data["image_path"].split(";base64,")
-                ext = format.split("/")[-1]
-                data = ContentFile(
-                    base64.b64decode(imgstr),
-                    name=f'{new_rtsproduct.id}-{request.data["name"]}.{ext}',
-                )
-                new_rtsproduct.image_path = data
-
             new_rtsproduct.save()
             serializer = RTSProductSerializer(
                 new_rtsproduct, context={"request": request}
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, pk=None):
+        permission_classes = [IsAdminUser]
+        if not request.user.customer.is_admin:
+            return Response(
+                {"error": "You do not have permission to perform this action."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        else:
+            try:
+                rts_product = RTSProduct.objects.get(pk=pk)
+            except RTSProduct.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            rts_product.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)

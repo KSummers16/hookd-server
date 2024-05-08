@@ -20,5 +20,16 @@
       "name": "Meg Ducharme",
       "is_admin": true
     }
+  },
+  {
+    "model": "hookdapi.customer",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "address": "220 Tessa Grace",
+      "email_address": "kasummers16@gmail.com",
+      "name": "Kim Summers",
+      "is_admin": true
+    }
   }
 ]

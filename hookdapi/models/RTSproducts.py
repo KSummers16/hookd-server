@@ -6,7 +6,7 @@ from .Category import Category
 
 class RTSProduct(models.Model):
     name = models.CharField(max_length=50)
-    price = models.FloatField(validators=[MinValueValidator(0.00)])
+    price = models.IntegerField(validators=[MinValueValidator(0.00)])
     description = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     pattern = models.CharField(max_length=255, null=True)

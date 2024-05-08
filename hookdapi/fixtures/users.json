@@ -26,5 +26,20 @@
       "is_active": true,
       "date_joined": "2022-10-21T21:16:33.812Z"
     }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "kasummers16@gmail.com",
+      "password": "pbkdf2_sha256$720000$RlkdXYFDDwknNIrVcWzF6r$jfLY0qTWPB4q4ApY4/8P/+wIS320ORsULYoidZL7pys=",
+      "email": "kasummers16@gmail.com",
+      "first_name": "Kim",
+      "last_name": "Summers",
+      "is_staff": true,
+      "is_active": true,
+      "is_superuser": true,
+      "date_joined": "2024-05-08T00:00:00Z"
+    }
   }
 ]
