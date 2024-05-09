@@ -3,8 +3,6 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from hookdapi.models import CusProduct, Category
-import base64
-from django.core.files.base import ContentFile
 from ..permissions import IsAdminUser
 
 

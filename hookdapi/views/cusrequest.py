@@ -2,7 +2,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from hookdapi.models import CusProduct, CusRequest, Eyes, Color, Customer
+from hookdapi.models import CusProduct, CusRequest
 
 
 class CusRequestSerializer(serializers.ModelSerializer):
