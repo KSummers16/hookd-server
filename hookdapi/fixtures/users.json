@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "username": "ryan@ryantanay.com",
-      "password": "pbkdf2_sha256$320000$skKMaZQjJwGMIJO1MmeaoP$68b2U4VFPL1ZQYgYmM7sIJUWPDhKCrAJOrdz4MWnLq4=",
+      "password": "pbkdf2_sha256$720000$RlkdXYFDDwknNIrVcWzF6r$jfLY0qTWPB4q4ApY4/8P/+wIS320ORsULYoidZL7pys.s",
       "email": "ryan@ryantanay.com",
       "first_name": "Ryan",
       "last_name": "Tanay",
@@ -18,7 +18,7 @@
     "pk": 2,
     "fields": {
       "username": "meg@ducharme.com",
-      "password": "pbkdf2_sha256$320000$6caQGznxTT5xOWckvjT6QO$YZTdqhVzw5XIXUcA2TrQsZuC4SJGBeFc2OYOIz6j8Lk=",
+      "password": "pbkdf2_sha256$720000$RlkdXYFDDwknNIrVcWzF6r$jfLY0qTWPB4q4ApY4/8P/+wIS320ORsULYoidZL7pys",
       "email": "meg@ducharme.com",
       "first_name": "Meg",
       "last_name": "Ducharme",
@@ -38,7 +38,6 @@
       "last_name": "Summers",
       "is_staff": true,
       "is_active": true,
-      "is_superuser": true,
       "date_joined": "2024-05-08T00:00:00Z"
     }
   }
