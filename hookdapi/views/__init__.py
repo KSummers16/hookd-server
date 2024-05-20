@@ -11,4 +11,3 @@ from .cart import CartView
 from .cusrequest import CusRequestSerializer, CusRequestView
 from .payment import Payments
 from .lineitem import CartItem
-from .messages import send_message, get_csrf_token

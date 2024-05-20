@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,21 +42,25 @@ REST_FRAMEWORK = {
     ],
 }
 
-CORS_ORIGIN_WHITELIST = (
+CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-)
+]
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "credentials",
+]
 
+CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -136,3 +141,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # MEDIA_URL = "/media/"
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",  # Default Django origin
+    "http://localhost:5173",  # Add this line to trust your React app's origin
+]
+
+
+SESSION_COOKIE_SAMESITE = None
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = None
+CSRF_COOKIE_SECURE = True
