@@ -7,6 +7,7 @@ class Customer(models.Model):
     address = models.CharField(max_length=255)
     email_address = models.EmailField()
     name = models.CharField(max_length=100)
+    is_admin = models.BooleanField(default=False)
 
     def is_admin(self):
         return self.user.is_superuser
