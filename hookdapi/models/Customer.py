@@ -9,5 +9,8 @@ class Customer(models.Model):
     name = models.CharField(max_length=100)
     is_admin = models.BooleanField(default=False)
 
-    def is_admin(self):
+    def __str__(self):
+        return self.name
+
+    def is_admin_user(self):
         return self.user.is_superuser
