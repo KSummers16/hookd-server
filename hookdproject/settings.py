@@ -94,8 +94,8 @@ WSGI_APPLICATION = "hookdproject.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    },
 }
 
 
@@ -156,3 +156,9 @@ SESSION_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = None
 CSRF_COOKIE_SECURE = True
+
+
+if os.environ.get("DJANGO_DEVELOPMENT") == "True":
+    from .settings import *
+else:
+    from .production import *
