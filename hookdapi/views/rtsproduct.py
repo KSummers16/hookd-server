@@ -2,6 +2,8 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from hookdapi.models import RTSProduct, Eyes, Category
 import base64
 from django.core.files.base import ContentFile
@@ -28,6 +30,9 @@ class RTSProductSerializer(serializers.ModelSerializer):
 
 
 class RTSProductsView(ViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [AllowAny]
+
     def list(self, request):
         rts_products = RTSProduct.objects.all()
         serializer = RTSProductSerializer(
@@ -45,7 +50,12 @@ class RTSProductsView(ViewSet):
 
     def create(self, request):
         permission_classes = [IsAdminUser]
-        if not request.user.customer.is_admin:
+        if not request.user.is_authenticated:
+            return Response(
+                {"error": "Authentication is required."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+        elif not request.user.customer.is_admin:
             return Response(
                 {"error": "You do not have permission to perform this action."},
                 status=status.HTTP_403_FORBIDDEN,
@@ -87,7 +97,12 @@ class RTSProductsView(ViewSet):
 
     def destroy(self, request, pk=None):
         permission_classes = [IsAdminUser]
-        if not request.user.customer.is_admin:
+        if not request.user.is_authenticated:
+            return Response(
+                {"error": "Authentication is required."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+        elif not request.user.customer.is_admin:
             return Response(
                 {"error": "You do not have permission to perform this action."},
                 status=status.HTTP_403_FORBIDDEN,
