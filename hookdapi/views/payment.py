@@ -1,100 +1,36 @@
-"""View module for handling requests about customer payment types"""
+import json
+import os
+import stripe
 
-from django.http import HttpResponseServerError
-from rest_framework.viewsets import ViewSet
-from rest_framework.response import Response
-from rest_framework import serializers
-from rest_framework import status
-from hookdapi.models import Payment, Customer
+# This is your test secret API key.
+stripe.api_key = "sk_test_51PDtaxA9AMTZvu4DkKM0nrXO9EuQtAEDyb0mFKlFFw5qR12lQdjNuScCQsxe6T29pftONqPWjeH0vL4YJdhtbvkZ00nhjAcsZn"
 
-
-class PaymentSerializer(serializers.HyperlinkedModelSerializer):
-    """JSON serializer for Payment
-
-    Arguments:
-        serializers
-    """
-
-    class Meta:
-        model = Payment
-        url = serializers.HyperlinkedIdentityField(
-            view_name="payment", lookup_field="id"
-        )
-        fields = (
-            "id",
-            "merchant_name",
-            "account_number",
-            "expiration_date",
-            "create_date",
-        )
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 
-class Payments(ViewSet):
+def calculate_order_amount(items):
 
-    def create(self, request):
-        """Handle POST operations
+    return 1400
 
-        Returns:
-            Response -- JSON serialized payment instance
-        """
-        new_payment = Payment()
-        new_payment.merchant_name = request.data["merchant_name"]
-        new_payment.account_number = request.data["account_number"]
-        new_payment.expiration_date = request.data["expiration_date"]
-        new_payment.create_date = request.data["create_date"]
-        customer = Customer.objects.get(user=request.auth.user)
-        new_payment.customer = customer
-        new_payment.save()
 
-        serializer = PaymentSerializer(new_payment, context={"request": request})
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    def retrieve(self, request, pk=None):
-        """Handle GET requests for single payment type
-
-        Returns:
-            Response -- JSON serialized payment_type instance
-        """
+@csrf_exempt
+@login_required
+def create_payment(request):
+    if request.method == "POST":
         try:
-            payment_type = Payment.objects.get(pk=pk)
-            serializer = PaymentSerializer(payment_type, context={"request": request})
-            return Response(serializer.data)
-        except Exception as ex:
-            return HttpResponseServerError(ex)
-
-    def destroy(self, request, pk=None):
-        """Handle DELETE requests for a single payment type
-
-        Returns:
-            Response -- 200, 404, or 500 status code
-        """
-        try:
-            payment = Payment.objects.get(pk=pk)
-            payment.delete()
-
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-        except Payment.DoesNotExist as ex:
-            return Response({"message": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
-
-        except Exception as ex:
-            return Response(
-                {"message": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            data = json.loads(request.body)
+            # Create a PaymentIntent with the order amount and currency
+            intent = stripe.PaymentIntent.create(
+                amount=calculate_order_amount(data["items"]),
+                currency="usd",
+                # In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+                automatic_payment_methods={
+                    "enabled": True,
+                },
             )
-
-    def list(self, request):
-        """Handle GET requests to payment type resource"""
-        payment_types = Payment.objects.all()
-
-        user_id = request.user.id
-
-        try:
-            payment_types = Payment.objects.filter(customer__user__id=user_id)
-
-            serializer = PaymentSerializer(
-                payment_types, many=True, context={"request": request}
-            )
-            return Response(serializer.data)
-        except Exception as ex:
-            return HttpResponseServerError(ex)
+            return JsonResponse({"clientSecret": intent["client_secret"]})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=403)

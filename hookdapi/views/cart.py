@@ -82,6 +82,18 @@ class CartView(viewsets.ViewSet):
             )
 
             OrderProduct.objects.create(order=open_order, cusrequest=cusrequest)
+
+            order_products = OrderProduct.objects.filter(order=open_order)
+            total_price = sum(
+                (
+                    op.rtsproduct.price
+                    if op.rtsproduct
+                    else op.cusrequest.cus_product.price
+                )
+                for op in order_products
+            )
+
+            open_order.total_price = total_price
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(
@@ -103,6 +115,7 @@ class CartView(viewsets.ViewSet):
 
         cart_data = {
             "order_id": open_order.id,
+            "total_price": open_order.total_price,
             "order_products": order_product_serializer.data,
         }
 

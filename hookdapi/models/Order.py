@@ -9,3 +9,4 @@ class Order(models.Model):
     )
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     payment = models.ForeignKey(Payment, on_delete=models.DO_NOTHING, null=True)
+    total_price = models.PositiveIntegerField(default=0)

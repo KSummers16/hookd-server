@@ -16,7 +16,7 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
         url = serializers.HyperlinkedIdentityField(
             view_name="lineitem", lookup_field="id"
         )
-        fields = ("id", "lineitems", "customer_id", "payment_id")
+        fields = ("id", "lineitems", "customer_id", "payment_id", "total_price")
 
 
 class OrdersView(ViewSet):

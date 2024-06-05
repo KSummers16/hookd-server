@@ -10,7 +10,6 @@ from hookdapi.views import *
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r"rtsproducts", RTSProductsView, "rtsproducts")
 router.register(r"cusproducts", CusProductView, "cusproducts")
-# router.register(r"cusrequests", CusRequestView, "cusrequests")
 router.register(r"colors", ColorView, "colors")
 router.register(r"eyes", EyesView, "eyes")
 router.register(r"orders", OrdersView, "order")
@@ -18,7 +17,7 @@ router.register(r"category", CategoriesView, "category")
 router.register(r"cartitem", CartItem, "cartitem")
 router.register(r"customer", CustomersView, "customer")
 router.register(r"cart", CartView, "cart")
-router.register(r"payments", Payments, "payments")
+# router.register(r"payments", create_payment, "payments")
 router.register(r"cusrequests", CusRequestView, "cusrequests")
 
 
