@@ -24,6 +24,14 @@ import datetime
 
 class CartView(viewsets.ViewSet):
 
+    def calculate_total_price(self, open_order):
+        order_products = OrderProduct.objects.filter(order=open_order)
+        total_price = sum(
+            (op.rtsproduct.price if op.rtsproduct else op.cusrequest_cus_product.price)
+            for op in order_products
+        )
+        return total_price
+
     def create(self, request):
         current_user = Customer.objects.get(user=request.auth.user)
 
@@ -46,6 +54,10 @@ class CartView(viewsets.ViewSet):
                 )
 
             OrderProduct.objects.create(order=open_order, rtsproduct=rtsproduct)
+
+            open_order.total_price = self.calculate_total_price(open_order)
+            open_order.save()
+
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         # Handle creating a CusRequest and adding it to the cart
@@ -83,17 +95,9 @@ class CartView(viewsets.ViewSet):
 
             OrderProduct.objects.create(order=open_order, cusrequest=cusrequest)
 
-            order_products = OrderProduct.objects.filter(order=open_order)
-            total_price = sum(
-                (
-                    op.rtsproduct.price
-                    if op.rtsproduct
-                    else op.cusrequest.cus_product.price
-                )
-                for op in order_products
-            )
+            open_order.total_price = self.calculate_total_price(open_order)
+            open_order.save()
 
-            open_order.total_price = total_price
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(
