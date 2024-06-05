@@ -2,6 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework import serializers
 from hookdapi.models import Eyes
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 
 
 class EyesSerializer(serializers.ModelSerializer):
@@ -11,6 +13,9 @@ class EyesSerializer(serializers.ModelSerializer):
 
 
 class EyesView(viewsets.ViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def list(self, request):
         eyes = Eyes.objects.all()
         serializer = EyesSerializer(eyes, many=True, context={"request": request})

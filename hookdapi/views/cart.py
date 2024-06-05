@@ -27,7 +27,7 @@ class CartView(viewsets.ViewSet):
     def calculate_total_price(self, open_order):
         order_products = OrderProduct.objects.filter(order=open_order)
         total_price = sum(
-            (op.rtsproduct.price if op.rtsproduct else op.cusrequest_cus_product.price)
+            (op.rtsproduct.price if op.rtsproduct else op.cusrequest.cus_product.price)
             for op in order_products
         )
         return total_price

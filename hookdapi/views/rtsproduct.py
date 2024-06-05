@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from hookdapi.models import RTSProduct, Eyes, Category
 import base64
 from django.core.files.base import ContentFile
@@ -31,7 +31,7 @@ class RTSProductSerializer(serializers.ModelSerializer):
 
 class RTSProductsView(ViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def list(self, request):
         rts_products = RTSProduct.objects.all()

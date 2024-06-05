@@ -2,6 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework import serializers
 from hookdapi.models import Color
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 
 
 class ColorSerializer(serializers.ModelSerializer):
@@ -12,6 +14,9 @@ class ColorSerializer(serializers.ModelSerializer):
 
 
 class ColorView(viewsets.ViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def list(self, request):
         colors = Color.objects.all()
         serializer = ColorSerializer(colors, many=True, context={"request": request})

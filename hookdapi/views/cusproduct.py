@@ -3,6 +3,9 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from hookdapi.models import CusProduct, Category
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
 from ..permissions import IsAdminUser
 
 
@@ -25,6 +28,8 @@ class CusProductSerializer(serializers.ModelSerializer):
 
 
 class CusProductView(ViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def list(self, request):
         cus_products = CusProduct.objects.all()
