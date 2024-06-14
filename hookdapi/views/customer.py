@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework import status
 from hookdapi.models import Customer
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -18,7 +19,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 class CustomersView(ViewSet):
 
-    @login_required
+    @method_decorator(login_required)
     def update(self, request, pk=None):
 
         try:
@@ -28,10 +29,7 @@ class CustomersView(ViewSet):
                 "Customer not found", status=status.HTTP_404_NOT_FOUND
             )
 
-        customer.user.name = request.data["name"]
-        customer.user.email = request.data["email"]
         customer.address = request.data["address"]
-        customer.user.save()
         customer.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
