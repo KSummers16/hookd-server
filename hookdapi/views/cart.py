@@ -20,6 +20,7 @@ from hookdapi.models import (
 )
 from .rtsproduct import RTSProductSerializer
 import datetime
+from django.core.mail import send_mail
 
 
 class CartView(viewsets.ViewSet):
@@ -132,12 +133,36 @@ class CartView(viewsets.ViewSet):
             order_to_complete = Order.objects.get(
                 customer=current_user, payment__isnull=True
             )
-            payment_id = request.data.get("payment_id")
+            order_products = OrderProduct.objects.filter(order=order_to_complete)
 
-            order_to_complete.payment_id = payment_id
+            subject = "New Order Received"
+            message = f"A new order has been placed by {current_user.user.email}.\n\nOrder Details:\n"
+            total_price = 0
+            for order_product in order_products:
+                if order_product.rtsproduct:
+                    product_name = order_product.rtsproduct.name
+                    product_price = order_product.rtsproduct.price
+                else:
+                    product_name: order_product.cusrequest.cus_product.name
+                    product_price: order_product.cusrequest.cus_product.price
+                message += f"{product_name}\nQuantity: 1\nPrice: ${product_price}\n\n"
+                total_price += product_price
+            message += f"Total Price: ${total_price}"
+
+            send_mail(
+                subject,
+                message,
+                "hookdbykim@gmail.com",
+                ["hookdbykim@gmail.com", current_user.user.email],
+                fail_silently=False,
+            )
+
+            order_to_complete.emailed = True
             order_to_complete.save()
 
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {"message": "Order placed successfully."}, status=status.HTTP_200_OK
+            )
         except Order.DoesNotExist:
             return Response(
                 {"message": "Order not found"}, status=status.HTTP_404_NOT_FOUND

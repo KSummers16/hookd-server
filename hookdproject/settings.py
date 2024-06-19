@@ -19,7 +19,7 @@ DEBUG = os.getenv("DEBUG", "False")
 # ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 # DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost"]
 
 # Application definition
 
@@ -158,3 +158,13 @@ SESSION_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = None
 CSRF_COOKIE_SECURE = True
+
+
+# settings.py
+
+EMAIL_BACKEND = "django_smtp_ssl.SSLEmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = "hookdbykim@gmail.com"
+EMAIL_HOST_PASSWORD = "vowo ixib ciej geqh"
