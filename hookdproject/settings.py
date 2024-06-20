@@ -19,8 +19,7 @@ DEBUG = os.getenv("DEBUG", "False")
 # ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 # DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False")
 
-ALLOWED_HOSTS = ["coral-app-da9ux.ondigitalocean.app"]
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["coral-app-da9ux.ondigitalocean.app", "localhost"]
 
 # Application definition
 
