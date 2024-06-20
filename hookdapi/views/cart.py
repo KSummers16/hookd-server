@@ -136,7 +136,7 @@ class CartView(viewsets.ViewSet):
             order_products = OrderProduct.objects.filter(order=order_to_complete)
 
             subject = "New Order Received"
-            message = f"A new order has been placed by {current_user.user.email}.\n\nOrder Details:\n"
+            message = f"A new order has been placed by {current_user.user.first_name} {current_user.user.last_name}.\n email: {current_user.user.email}\n shipping address: {current_user.address}\nOrder Details:\n"
             total_price = 0
             for order_product in order_products:
                 if order_product.rtsproduct:
