@@ -24,20 +24,21 @@ from django.core.mail import send_mail
 
 
 class CartView(viewsets.ViewSet):
+    shipping_cost = 10  # $10 in shipping
 
     def calculate_total_price(self, open_order):
         order_products = OrderProduct.objects.filter(order=open_order)
-        total_price = sum(
+        subtotal = sum(
             (op.rtsproduct.price if op.rtsproduct else op.cusrequest.cus_product.price)
             for op in order_products
         )
-        return total_price
+        return subtotal + self.shipping_cost
 
     def create(self, request):
         current_user = Customer.objects.get(user=request.auth.user)
 
         try:
-            open_order = Order.objects.get(customer=current_user, payment__isnull=True)
+            open_order = Order.objects.get(customer=current_user, emailed=False)
         except Order.DoesNotExist:
             open_order = Order.objects.create(
                 customer=current_user, created_date=datetime.datetime.now()
@@ -109,7 +110,7 @@ class CartView(viewsets.ViewSet):
         current_user = Customer.objects.get(user=request.auth.user)
 
         try:
-            open_order = Order.objects.get(customer=current_user, payment__isnull=True)
+            open_order = Order.objects.get(customer=current_user, emailed=False)
         except Order.DoesNotExist:
             return Response(
                 {"message": "No open order found."}, status=status.HTTP_404_NOT_FOUND
@@ -118,9 +119,16 @@ class CartView(viewsets.ViewSet):
         order_products = OrderProduct.objects.filter(order=open_order)
         order_product_serializer = CartItemSerializer(order_products, many=True)
 
+        subtotal = sum(
+            (op.rtsproduct.price if op.rtsproduct else op.cusrequest.cus_product.price)
+            for op in order_products
+        )
+
         cart_data = {
             "order_id": open_order.id,
-            "total_price": open_order.total_price,
+            "subtotal": subtotal,
+            "shipping_cost": self.shipping_cost,
+            "total_price": subtotal + self.shipping_cost,
             "order_products": order_product_serializer.data,
         }
 
@@ -137,7 +145,7 @@ class CartView(viewsets.ViewSet):
 
             subject = "New Order Received"
             message = f"A new order has been placed by {current_user.user.first_name} {current_user.user.last_name}.\n email: {current_user.user.email}\n shipping address: {current_user.address}\nOrder Details:\n"
-            total_price = 0
+            subtotal = 0
             for order_product in order_products:
                 if order_product.rtsproduct:
                     product_name = order_product.rtsproduct.name
@@ -146,8 +154,11 @@ class CartView(viewsets.ViewSet):
                     product_name: order_product.cusrequest.cus_product.name
                     product_price: order_product.cusrequest.cus_product.price
                 message += f"{product_name}\nQuantity: 1\nPrice: ${product_price}\n\n"
-                total_price += product_price
-            message += f"Total Price: ${total_price}"
+                subtotal += product_price
+
+            message += f"Subtotal: ${subtotal}\n"
+            message += f"Shipping: ${self.shipping_cost}\n"
+            message += f"Total Price: ${subtotal + self.shipping_cost}"
 
             send_mail(
                 subject,
