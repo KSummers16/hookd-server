@@ -148,16 +148,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # MEDIA_URL = "/media/"
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:8000",  # Default Django origin
-    "http://localhost:5173",  # Add this line to trust your React app's origin
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://localhost:8000",  # Default Django origin
+#     "http://localhost:5173",  # Add this line to trust your React app's origin
+# ]
 
 
-SESSION_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = None
-CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SAMESITE = None
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SAMESITE = None
+# CSRF_COOKIE_SECURE = True
 
 
 # settings.py

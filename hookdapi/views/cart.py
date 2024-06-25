@@ -192,7 +192,7 @@ class CartView(viewsets.ViewSet):
     @action(methods=["delete"], url_path="clear-cart", detail=False)
     def delete(self, request):
         current_user = Customer.objects.get(user=request.auth.user)
-        open_order = Order.objects.get(customer=current_user, payment=None)
+        open_order = Order.objects.get(customer=current_user, emailed=False)
 
         OrderProduct.objects.filter(order=open_order).delete()
 
