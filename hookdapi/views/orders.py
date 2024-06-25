@@ -6,11 +6,12 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from .lineitem import CartItemSerializer
-from hookdapi.models import Order, Customer
+from hookdapi.models import Order, Customer, RTSSold
 
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     lineitems = CartItemSerializer(many=True, read_only=True)
+    rts_sold_items = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
@@ -21,10 +22,33 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
             "id",
             "lineitems",
             "customer_id",
+            "rts_sold_items",
             "payment_id",
             "total_price",
             "emailed",
         )
+
+    def get_rts_sold_items(self, obj):
+        if obj.emailed:
+            return RTSSoldSerializer(RTSSold.objects.filter(order=obj), many=True)
+        return None
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        if instance.emailed:
+            representation["rts_sold_items"] = RTSSoldSerializer(
+                RTSSold.objects.filter(order=instance), many=True
+            ).data
+            representation.pop("lineitems", None)
+        else:
+            representation.pop("rts_sold_items", None)
+        return representation
+
+
+class RTSSoldSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RTSSold
+        fields = ("id", "name", "price", "sold_date")
 
 
 class OrdersView(ViewSet):
@@ -61,6 +85,6 @@ class OrdersView(ViewSet):
         else:
             orders = Order.objects.filter(customer=customer, emailed=True)
 
-        json_orders = OrderSerializer(orders, many=True, context={"request": request})
+        serializer = OrderSerializer(orders, many=True, context={"request": request})
 
-        return Response(json_orders.data)
+        return Response(serializer.data)

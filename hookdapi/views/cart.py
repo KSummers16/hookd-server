@@ -14,11 +14,11 @@ from hookdapi.models import (
     RTSProduct,
     CusRequest,
     CusProduct,
-    Cart,
+    RTSSold,
     Eyes,
     Color,
+    Cart,
 )
-from .rtsproduct import RTSProductSerializer
 import datetime
 from django.core.mail import send_mail
 
@@ -148,11 +148,21 @@ class CartView(viewsets.ViewSet):
             subtotal = 0
             for order_product in order_products:
                 if order_product.rtsproduct:
+                    rts_product = order_product.rtsproduct
+
+                    RTSSold.objects.create(
+                        name=rts_product.name,
+                        price=rts_product.price,
+                        order=order_to_complete,
+                    )
+
                     product_name = order_product.rtsproduct.name
                     product_price = order_product.rtsproduct.price
+
+                    rts_product.delete()
                 else:
-                    product_name: order_product.cusrequest.cus_product.name
-                    product_price: order_product.cusrequest.cus_product.price
+                    product_name = order_product.cusrequest.cus_product.name
+                    product_price = order_product.cusrequest.cus_product.price
                 message += f"{product_name}\nQuantity: 1\nPrice: ${product_price}\n\n"
                 subtotal += product_price
 
