@@ -37,6 +37,9 @@ class CustomersView(ViewSet):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def retrieve(self, request, pk=None):
+        print("Retrieve method called")  # Debug print
+        if pk == "count":
+            return self.count(request)
         try:
             customer = Customer.objects.get(user=request.user)
             serializer = CustomerSerializer(customer, context={"request": request})
@@ -47,10 +50,15 @@ class CustomersView(ViewSet):
             )
 
     @action(detail=False, methods=["get"], permission_classes=[IsAdminUser])
+    # def count(self, request):
+    #     """
+    #     Get the count of all customers.
+    #     This endpoint is only accessible to admin users.
+    #     """
+    #     count = Customer.objects.count()
+    #     return Response({"count": count})
     def count(self, request):
-        """
-        Get the count of all customers.
-        This endpoint is only accessible to admin users.
-        """
+        print("Count method called")  # Debug print
         count = Customer.objects.count()
+        print(f"Customer count: {count}")  # Debug print
         return Response({"count": count})
