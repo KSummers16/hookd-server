@@ -6,6 +6,8 @@ from rest_framework import status
 from hookdapi.models import Customer
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -43,3 +45,12 @@ class CustomersView(ViewSet):
             return HttpResponseServerError(
                 "Customer not found", status=status.HTTP_404_NOT_FOUND
             )
+
+    @action(detail=False, methods=["get"], permission_classes=[IsAdminUser])
+    def count(self, request):
+        """
+        Get the count of all customers.
+        This endpoint is only accessible to admin users.
+        """
+        count = Customer.objects.count()
+        return Response({"count": count})
