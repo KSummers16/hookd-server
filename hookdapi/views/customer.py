@@ -49,7 +49,12 @@ class CustomersView(ViewSet):
                 "Customer not found", status=status.HTTP_404_NOT_FOUND
             )
 
-    @action(detail=False, methods=["get"], permission_classes=[IsAdminUser])
+    @action(
+        detail=False,
+        methods=["get"],
+        permission_classes=[IsAdminUser],
+        url_path="count",
+    )
     # def count(self, request):
     #     """
     #     Get the count of all customers.
