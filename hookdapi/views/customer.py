@@ -39,7 +39,7 @@ class CustomersView(ViewSet):
     def retrieve(self, request, pk=None):
         print("Retrieve method called")  # Debug print
         if pk == "count":
-            return self.count(request)
+            return self.get_count(request)
         try:
             customer = Customer.objects.get(user=request.user)
             serializer = CustomerSerializer(customer, context={"request": request})
@@ -57,7 +57,7 @@ class CustomersView(ViewSet):
     #     """
     #     count = Customer.objects.count()
     #     return Response({"count": count})
-    def count(self, request):
+    def get_count(self, request):
         print("Count method called")  # Debug print
         count = Customer.objects.count()
         print(f"Customer count: {count}")  # Debug print
