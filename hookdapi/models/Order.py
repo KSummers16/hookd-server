@@ -11,3 +11,12 @@ class Order(models.Model):
     payment = models.ForeignKey(Payment, on_delete=models.DO_NOTHING, null=True)
     total_price = models.PositiveIntegerField(default=0)
     emailed = models.BooleanField(default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["customer"],
+                condition=Q(emailed=False),
+                name="unique_open_order_per_customer",
+            )
+        ]
