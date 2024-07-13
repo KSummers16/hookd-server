@@ -158,6 +158,10 @@ class CartView(viewsets.ViewSet):
                     product_name = order_product.rtsproduct.name
                     product_price = order_product.rtsproduct.price
 
+                    message += (
+                        f"RTS Product: {product_name}\nPrice: ${product_price}\n\n"
+                    )
+
                     rts_product.delete()
                 else:
                     product_name = order_product.cusrequest.cus_product.name
@@ -167,15 +171,24 @@ class CartView(viewsets.ViewSet):
                     color1 = cusrequest.color1.name if cusrequest.color1 else "N/A"
                     color2 = cusrequest.color2.name if cusrequest.color2 else "N/A"
 
-                message += (
-                    f"{product_name}\nQuantity: 1\nPrice: ${product_price}\n"
-                    f"Eyes: {eyes}\nColor 1: {color1}\nColor 2: {color2}\n\n"
-                )
+                    custom_details = (
+                        f"Custom Request: {product_name}\nQuantity: 1\nPrice: ${product_price}\n"
+                        f"Eyes: {eyes}\nColor 1: {color1}\nColor 2: {color2}\n\n"
+                    )
+                    print(f"Adding custom details to message: {custom_details}")
+                    message += custom_details
+
+                # message += (
+                #     f"{product_name}\nQuantity: 1\nPrice: ${product_price}\n"
+                #     f"Eyes: {eyes}\nColor 1: {color1}\nColor 2: {color2}\n\n"
+                # )
                 subtotal += product_price
 
             message += f"Subtotal: ${subtotal}\n"
             message += f"Shipping: ${self.shipping_cost}\n"
             message += f"Total Price: ${subtotal + self.shipping_cost}"
+
+            print(f"Final message content: {message}")
 
             send_mail(
                 subject,
