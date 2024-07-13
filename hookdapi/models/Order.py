@@ -1,6 +1,7 @@
 from django.db import models
 from .Customer import Customer
 from .Payment import Payment
+from django.db.models import Q
 
 
 class Order(models.Model):
