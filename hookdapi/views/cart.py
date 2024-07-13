@@ -162,7 +162,15 @@ class CartView(viewsets.ViewSet):
                 else:
                     product_name = order_product.cusrequest.cus_product.name
                     product_price = order_product.cusrequest.cus_product.price
-                message += f"{product_name}\nQuantity: 1\nPrice: ${product_price}\n\n"
+
+                    eyes = cusrequest.eyes.name if cusrequest.eyes else "N/A"
+                    color1 = cusrequest.color1.name if cusrequest.color1 else "N/A"
+                    color2 = cusrequest.color2.name if cusrequest.color2 else "N/A"
+
+                message += (
+                    f"{product_name}\nQuantity: 1\nPrice: ${product_price}\n"
+                    f"Eyes: {eyes}\nColor 1: {color1}\nColor 2: {color2}\n\n"
+                )
                 subtotal += product_price
 
             message += f"Subtotal: ${subtotal}\n"
