@@ -40,11 +40,18 @@ class CartView(viewsets.ViewSet):
     def create(self, request):
         current_user = Customer.objects.get(user=request.auth.user)
 
-        open_order, created = Order.objects.get_or_create(
-            customer=current_user,
-            emailed=False,
-            defaults={"created_date": datetime.datetime.now()},
+        open_order = (
+            Order.objects.filter(customer=current_user, emailed=False)
+            .order_by("-created_date")
+            .first()
         )
+
+        if not open_order:
+            open_order = Order.objects.create(
+                customer=current_user,
+                emailed=False,
+                created_date=datetime.datetime.now(),
+            )
 
         # Handle adding an RTSProduct to the cart
         rtsproduct_id = request.data.get("rtsproduct_id")
@@ -140,7 +147,16 @@ class CartView(viewsets.ViewSet):
     def complete(self, request):
         current_user = Customer.objects.get(user=request.auth.user)
         try:
-            order_to_complete = Order.objects.get(customer=current_user, emailed=False)
+            order_to_complete = (
+                Order.objects.filter(customer=current_user, emailed=False)
+                .order_by("-created_date")
+                .first()
+            )
+
+            if not order_to_complete:
+                return Response(
+                    {"message": "No open order found"}, status=status.HTTP_404_NOT_FOUND
+                )
             order_products = OrderProduct.objects.filter(order=order_to_complete)
 
             subject = "New Order Received"
