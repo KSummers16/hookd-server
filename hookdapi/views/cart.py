@@ -146,88 +146,88 @@ class CartView(viewsets.ViewSet):
     @action(methods=["post"], detail=False)
     def complete(self, request):
         current_user = Customer.objects.get(user=request.auth.user)
-        try:
-            order_to_complete = (
-                Order.objects.filter(customer=current_user, emailed=False)
-                .order_by("-created_date")
-                .first()
+
+        open_orders = Order.objects.filter(customer=current_user, emailed=False)
+
+        if not open_orders.exists():
+            return Response(
+                {"message": "No open order found"}, status=status.HTTP_404_NOT_FOUND
             )
 
-            if not order_to_complete:
-                return Response(
-                    {"message": "No open order found"}, status=status.HTTP_404_NOT_FOUND
+        if open_orders.count() > 1:
+            logger.warning(
+                f"Multiple open orders found for user {current_user.email_address}. Using most recent."
+            )
+        order_to_complete = open_orders.order_by("-created_date").first()
+
+        order_products = OrderProduct.objects.filter(order=order_to_complete)
+
+        subject = "New Order Received"
+        message = f"A new order has been placed by {current_user.user.first_name} {current_user.user.last_name}.\n email: {current_user.user.email}\n shipping address: {current_user.address}\nOrder Details:\n"
+        subtotal = 0
+
+        for order_product in order_products:
+            if order_product.rtsproduct:
+                rts_product = order_product.rtsproduct
+
+                RTSSold.objects.create(
+                    product_type=rts_product,
+                    name=rts_product.name,
+                    price=rts_product.price,
+                    order=order_to_complete,
                 )
-            order_products = OrderProduct.objects.filter(order=order_to_complete)
 
-            subject = "New Order Received"
-            message = f"A new order has been placed by {current_user.user.first_name} {current_user.user.last_name}.\n email: {current_user.user.email}\n shipping address: {current_user.address}\nOrder Details:\n"
-            subtotal = 0
-            for order_product in order_products:
-                if order_product.rtsproduct:
-                    rts_product = order_product.rtsproduct
+                product_name = order_product.rtsproduct.name
+                product_price = order_product.rtsproduct.price
 
-                    RTSSold.objects.create(
-                        product_type=rts_product,
-                        name=rts_product.name,
-                        price=rts_product.price,
-                        order=order_to_complete,
-                    )
+                message += f"RTS Product: {product_name}\nPrice: ${product_price}\n\n"
 
-                    product_name = order_product.rtsproduct.name
-                    product_price = order_product.rtsproduct.price
+                rts_product.delete()
+            else:
+                cusrequest = order_product.cusrequest
+                product_type = "Custom Request"
+                product_name = order_product.cusrequest.cus_product.name
+                product_price = order_product.cusrequest.cus_product.price
 
-                    message += (
-                        f"RTS Product: {product_name}\nPrice: ${product_price}\n\n"
-                    )
+                eyes = cusrequest.eyes.name if cusrequest.eyes else "N/A"
+                color1 = cusrequest.color1.name if cusrequest.color1 else "N/A"
+                color2 = cusrequest.color2.name if cusrequest.color2 else "N/A"
 
-                    rts_product.delete()
-                else:
-                    cusrequest = order_product.cusrequest
-                    product_type = "Custom Request"
-                    product_name = order_product.cusrequest.cus_product.name
-                    product_price = order_product.cusrequest.cus_product.price
+                custom_details = (
+                    f"Product type: {product_type}\nCustom Request: {product_name}\nQuantity: 1\nPrice: ${product_price}\n"
+                    f"Eyes: {eyes}\nColor 1: {color1}\nColor 2: {color2}\n\n"
+                )
+                print(f"Adding custom details to message: {custom_details}")
+                message += custom_details
 
-                    eyes = cusrequest.eyes.name if cusrequest.eyes else "N/A"
-                    color1 = cusrequest.color1.name if cusrequest.color1 else "N/A"
-                    color2 = cusrequest.color2.name if cusrequest.color2 else "N/A"
+            # message += (
+            #     f"{product_name}\nQuantity: 1\nPrice: ${product_price}\n"
+            #     f"Eyes: {eyes}\nColor 1: {color1}\nColor 2: {color2}\n\n"
+            # )
+            subtotal += product_price
 
-                    custom_details = (
-                        f"Product type: {product_type}\nCustom Request: {product_name}\nQuantity: 1\nPrice: ${product_price}\n"
-                        f"Eyes: {eyes}\nColor 1: {color1}\nColor 2: {color2}\n\n"
-                    )
-                    print(f"Adding custom details to message: {custom_details}")
-                    message += custom_details
+        message += f"Subtotal: ${subtotal}\n"
+        message += f"Shipping: ${self.shipping_cost}\n"
+        message += f"Total Price: ${subtotal + self.shipping_cost}"
 
-                # message += (
-                #     f"{product_name}\nQuantity: 1\nPrice: ${product_price}\n"
-                #     f"Eyes: {eyes}\nColor 1: {color1}\nColor 2: {color2}\n\n"
-                # )
-                subtotal += product_price
+        print(f"Final message content: {message}")
 
-            message += f"Subtotal: ${subtotal}\n"
-            message += f"Shipping: ${self.shipping_cost}\n"
-            message += f"Total Price: ${subtotal + self.shipping_cost}"
+        send_mail(
+            subject,
+            message,
+            "hookdbykim@gmail.com",
+            ["hookdbykim@gmail.com", current_user.user.email],
+            fail_silently=False,
+        )
 
-            print(f"Final message content: {message}")
+        order_to_complete.emailed = True
+        order_to_complete.save()
 
-            send_mail(
-                subject,
-                message,
-                "hookdbykim@gmail.com",
-                ["hookdbykim@gmail.com", current_user.user.email],
-                fail_silently=False,
-            )
+        open_orders.exclude(id=order_to_complete.id).update(emailed=True)
 
-            order_to_complete.emailed = True
-            order_to_complete.save()
-
-            return Response(
-                {"message": "Order placed successfully."}, status=status.HTTP_200_OK
-            )
-        except Order.DoesNotExist:
-            return Response(
-                {"message": "Order not found"}, status=status.HTTP_404_NOT_FOUND
-            )
+        return Response(
+            {"message": "Order placed successfully."}, status=status.HTTP_200_OK
+        )
 
     @action(methods=["delete"], url_path="clear-cart", detail=False)
     def delete(self, request):
