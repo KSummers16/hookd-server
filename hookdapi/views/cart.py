@@ -145,11 +145,16 @@ class CartView(viewsets.ViewSet):
 
     @action(methods=["post"], detail=False)
     def complete(self, request):
-        print(f"Complete order request received for user: {request.auth.user.id}")
+        logger.info(f"Complete order request received for user: {request.auth.user.id}")
         current_user = Customer.objects.get(user=request.auth.user)
 
         open_orders = Order.objects.filter(customer=current_user, emailed=False)
-        print(f"Number of open orders found: {open_orders.count()}")
+        logger.info(f"Number of open orders found: {open_orders.count()}")
+
+        for order in open_orders:
+            logger.info(
+                f"Open order ID: {order.id}, Created date: {order.created_date}"
+            )
 
         if not open_orders.exists():
             return Response(
@@ -199,7 +204,7 @@ class CartView(viewsets.ViewSet):
                     f"Product type: {product_type}\nCustom Request: {product_name}\nQuantity: 1\nPrice: ${product_price}\n"
                     f"Eyes: {eyes}\nColor 1: {color1}\nColor 2: {color2}\n\n"
                 )
-                print(f"Adding custom details to message: {custom_details}")
+                logger.info(f"Adding custom details to message: {custom_details}")
                 message += custom_details
 
             # message += (
@@ -212,7 +217,7 @@ class CartView(viewsets.ViewSet):
         message += f"Shipping: ${self.shipping_cost}\n"
         message += f"Total Price: ${subtotal + self.shipping_cost}"
 
-        print(f"Final message content: {message}")
+        logger.info(f"Final message content: {message}")
 
         send_mail(
             subject,
