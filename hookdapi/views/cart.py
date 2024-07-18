@@ -145,9 +145,11 @@ class CartView(viewsets.ViewSet):
 
     @action(methods=["post"], detail=False)
     def complete(self, request):
+        print(f"Complete order request received for user: {request.auth.user.id}")
         current_user = Customer.objects.get(user=request.auth.user)
 
         open_orders = Order.objects.filter(customer=current_user, emailed=False)
+        print(f"Number of open orders found: {open_orders.count()}")
 
         if not open_orders.exists():
             return Response(
