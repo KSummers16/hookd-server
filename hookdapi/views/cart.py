@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from django.db import transaction
 from rest_framework.decorators import action
 from rest_framework import serializers
 from rest_framework.response import Response
@@ -22,6 +23,7 @@ from hookdapi.models import (
 import datetime
 from django.core.mail import send_mail
 import logging
+
 
 logger = logging.getLogger(__name__)
 
@@ -119,7 +121,7 @@ class CartView(viewsets.ViewSet):
         current_user = Customer.objects.get(user=request.auth.user)
 
         try:
-            open_order = Order.objects.get(customer=current_user, emailed=False)
+            open_order = Order.objects.filter(customer=current_user, emailed=False)
         except Order.DoesNotExist:
             return Response(
                 {"message": "No open order found."}, status=status.HTTP_404_NOT_FOUND
@@ -143,6 +145,7 @@ class CartView(viewsets.ViewSet):
 
         return Response(cart_data)
 
+    @transaction.atomic
     @action(methods=["post"], detail=False)
     def complete(self, request):
         logger.info(f"Complete order request received for user: {request.auth.user.id}")
@@ -230,7 +233,11 @@ class CartView(viewsets.ViewSet):
         order_to_complete.emailed = True
         order_to_complete.save()
 
-        open_orders.exclude(id=order_to_complete.id).update(emailed=True)
+        closed_orders = open_orders.exclude(id=order_to_complete.id).update(
+            emailed=True
+        )
+        logger.info(f"Closed {closed_orders} additional open orders")
+        logger.info(f"Order {order_to_complete.id} completed successfully")
 
         return Response(
             {"message": "Order placed successfully."}, status=status.HTTP_200_OK
