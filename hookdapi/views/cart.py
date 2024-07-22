@@ -155,7 +155,7 @@ class CartView(viewsets.ViewSet):
         try:
             order_to_complete = Order.objects.filter(
                 customer=current_user, emailed=False
-            ).last()[0]
+            ).last()
         except Order.DoesNotExist:
             return Response(
                 {"message": "No open order found"}, status=status.HTTP_404_NOT_FOUND
