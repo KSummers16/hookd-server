@@ -150,10 +150,12 @@ class CartView(viewsets.ViewSet):
     def complete(self, request):
         current_user = Customer.objects.get(user=request.auth.user)
 
-        open_orders = Order.objects.get(customer=current_user, emailed=False)
+        # open_orders = Order.objects.get(customer=current_user, emailed=False)
 
         try:
-            order_to_complete = Order.objects.get(customer=current_user, emailed=False)
+            order_to_complete = Order.objects.filter(
+                customer=current_user, emailed=False
+            ).last()[0]
         except Order.DoesNotExist:
             return Response(
                 {"message": "No open order found"}, status=status.HTTP_404_NOT_FOUND
