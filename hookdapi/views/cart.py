@@ -121,7 +121,7 @@ class CartView(viewsets.ViewSet):
         current_user = Customer.objects.get(user=request.auth.user)
 
         try:
-            open_order = Order.objects.filter(customer=current_user, emailed=False)
+            open_order = Order.objects.get(customer=current_user, emailed=False)
         except Order.DoesNotExist:
             return Response(
                 {"message": "No open order found."}, status=status.HTTP_404_NOT_FOUND
@@ -148,27 +148,23 @@ class CartView(viewsets.ViewSet):
     @transaction.atomic
     @action(methods=["post"], detail=False)
     def complete(self, request):
-        logger.info(f"Complete order request received for user: {request.auth.user.id}")
         current_user = Customer.objects.get(user=request.auth.user)
 
-        open_orders = Order.objects.filter(customer=current_user, emailed=False)
-        logger.info(f"Number of open orders found: {open_orders.count()}")
+        open_orders = Order.objects.get(customer=current_user, emailed=False)
 
-        for order in open_orders:
-            logger.info(
-                f"Open order ID: {order.id}, Created date: {order.created_date}"
-            )
-
-        if not open_orders.exists():
+        try:
+            order_to_complete = Order.objects.get(customer=current_user, emailed=False)
+        except Order.DoesNotExist:
             return Response(
                 {"message": "No open order found"}, status=status.HTTP_404_NOT_FOUND
             )
-
-        if open_orders.count() > 1:
-            logger.warning(
-                f"Multiple open orders found for user {current_user.email_address}. Using most recent."
+        except Order.MultipleObjectsReturned:
+            # This is an error condition - log it and return an error response
+            logger.error(f"Multiple open orders found for user {current_user.user.id}")
+            return Response(
+                {"message": "Multiple open orders found. Please contact support."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-        order_to_complete = open_orders.order_by("-created_date").first()
 
         order_products = OrderProduct.objects.filter(order=order_to_complete)
 
@@ -207,13 +203,8 @@ class CartView(viewsets.ViewSet):
                     f"Product type: {product_type}\nCustom Request: {product_name}\nQuantity: 1\nPrice: ${product_price}\n"
                     f"Eyes: {eyes}\nColor 1: {color1}\nColor 2: {color2}\n\n"
                 )
-                logger.info(f"Adding custom details to message: {custom_details}")
                 message += custom_details
 
-            # message += (
-            #     f"{product_name}\nQuantity: 1\nPrice: ${product_price}\n"
-            #     f"Eyes: {eyes}\nColor 1: {color1}\nColor 2: {color2}\n\n"
-            # )
             subtotal += product_price
 
         message += f"Subtotal: ${subtotal}\n"
@@ -233,10 +224,6 @@ class CartView(viewsets.ViewSet):
         order_to_complete.emailed = True
         order_to_complete.save()
 
-        closed_orders = open_orders.exclude(id=order_to_complete.id).update(
-            emailed=True
-        )
-        logger.info(f"Closed {closed_orders} additional open orders")
         logger.info(f"Order {order_to_complete.id} completed successfully")
 
         return Response(
