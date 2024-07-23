@@ -23,9 +23,9 @@
   },
   {
     "model": "hookdapi.customer",
-    "pk": 3,
+    "pk": 1,
     "fields": {
-      "user": 3,
+      "user": 1,
       "address": "220 Tessa Grace",
       "email_address": "kasummers16@gmail.com",
       "name": "Kim Summers",

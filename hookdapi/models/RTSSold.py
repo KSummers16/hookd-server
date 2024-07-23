@@ -6,6 +6,7 @@ class RTSSold(models.Model):
     price = models.IntegerField()
     sold_date = models.DateTimeField(auto_now_add=True)
     order = models.ForeignKey("Order", on_delete=models.SET_NULL, null=True)
+    product_type = models.CharField(max_length=50)
 
     def __str__(self):
         return f"{self.name} - Sold on {self.sold_date}"

@@ -29,7 +29,7 @@
   },
   {
     "model": "auth.user",
-    "pk": 3,
+    "pk": 1,
     "fields": {
       "username": "kasummers16@gmail.com",
       "password": "pbkdf2_sha256$720000$RlkdXYFDDwknNIrVcWzF6r$jfLY0qTWPB4q4ApY4/8P/+wIS320ORsULYoidZL7pys=",
