@@ -51,6 +51,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "https://monkfish-app-pi2ii.ondigitalocean.app",
+    "https://www.hookdbykims.com",
+    "https://hookdbykims.com",
 ]
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "credentials",
