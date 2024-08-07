@@ -29,8 +29,12 @@ urlpatterns = [
     path("login", login_user),
     path("api-token-auth", obtain_auth_token),
     path("api-auth", include("rest_framework.urls", namespace="rest_framework")),
-    re_path(r"^.*", TemplateView.as_view(template_name="index.html"), name="index"),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+urlpatterns += [
+    re_path(r"^.*", TemplateView.as_view(template_name="index.html"), name="index"),
+]
