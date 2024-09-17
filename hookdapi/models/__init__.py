@@ -11,3 +11,6 @@ from .Cart import Cart
 from .CusRequest import CusRequest
 from .Category import Category
 from .RTSSold import RTSSold
+from .Weights import Weight
+from .Yarns import MasterYarn, CustomerYarn
+from .Companys import Company

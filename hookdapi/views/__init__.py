@@ -9,6 +9,8 @@ from .orders import OrdersView
 from .lineitem import CartItemSerializer
 from .cart import CartView
 from .cusrequest import CusRequestSerializer, CusRequestView
+from .weights import WeightsSerializer, WeightsView
+from .company import CompanySerializer, CompanyView
 
 # from .payment import create_payment
 from .lineitem import CartItem

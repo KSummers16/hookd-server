@@ -5,8 +5,6 @@ from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from hookdapi.models import RTSProduct, Eyes, Category
-import base64
-from django.core.files.base import ContentFile
 from ..permissions import IsAdminUser
 
 
