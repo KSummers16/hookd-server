@@ -3,13 +3,17 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from hookdapi.models import Weights
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.permissions import (
+    IsAuthenticatedOrReadOnly,
+    AllowAny,
+    IsAuthenticated,
+)
 
 
 class WeightsSerializer(serializers.ModelField):
     class Meta:
         model = Weights
-        fields = ["id", "name"]
+        fields = ["id", "name", "ply"]
 
 
 class WeightsView(viewsets.ViewSet):
@@ -28,3 +32,20 @@ class WeightsView(viewsets.ViewSet):
             return Response(serializer.data)
         except Weights.DoesNotExist:
             return ResourceWarning(status=status.HTTP_404_NOT_FOUND)
+
+    # def create(self, request):
+    #     if not request.user.is_authenticated:
+    #         return Response(
+    #             {"error": "Authentication is required."},
+    #             status=status.HTTP_401_UNAUTHORIZED,
+    #         )
+    #     elif not request.user.customer.is_admin:
+    #         return Response(
+    #             {"error": "You do not have permission to perform this action"},
+    #             status=status.HTTP_403_FORBIDDEN,
+    #         )
+    #     serializer = WeightsSerializer(data=request.data, context={"request": request})
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
