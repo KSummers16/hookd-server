@@ -82,5 +82,19 @@
     "fields": {
       "name": "Brown"
     }
+  },
+  {
+    "model": "hookdapi.color",
+    "pk": 13,
+    "fields": {
+      "name": "Multicolor"
+    }
+  },
+  {
+    "model": "hookdapi.color",
+    "pk": 14,
+    "fields": {
+      "name": "Pink"
+    }
   }
 ]

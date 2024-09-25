@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework import serializers
-from hookdapi.models import Weights
+from hookdapi.models import Weight
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
@@ -10,9 +10,9 @@ from rest_framework.permissions import (
 )
 
 
-class WeightsSerializer(serializers.ModelField):
+class WeightsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Weights
+        model = Weight
         fields = ["id", "name", "ply"]
 
 
@@ -21,17 +21,17 @@ class WeightsView(viewsets.ViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def list(self, request):
-        weights = Weights.objects.all()
+        weights = Weight.objects.all()
         serializer = WeightsSerializer(weights, many=True, context={"request": request})
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         try:
-            weights = Weights.objects.get(pk=pk)
+            weights = Weight.objects.get(pk=pk)
             serializer = WeightsSerializer(weights, context={"request": request})
             return Response(serializer.data)
-        except Weights.DoesNotExist:
-            return ResourceWarning(status=status.HTTP_404_NOT_FOUND)
+        except Weight.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     # def create(self, request):
     #     if not request.user.is_authenticated:
