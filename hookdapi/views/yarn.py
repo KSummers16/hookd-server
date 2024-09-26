@@ -6,6 +6,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from hookdapi.models import Company, Weight, Color
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
     IsAdminUser,
@@ -15,10 +16,20 @@ from hookdapi.models import MasterYarn, CustomerYarn, Customer
 
 
 class MasterYarnSerializer(serializers.ModelSerializer):
+    company = serializers.PrimaryKeyRelatedField(queryset=Company.objects.all())
+    weight = serializers.PrimaryKeyRelatedField(queryset=Weight.objects.all())
+    base_color = serializers.PrimaryKeyRelatedField(queryset=Color.objects.all())
 
     class Meta:
         model = MasterYarn
-        fields = ("id", "company", "weight", "base_color", "color_name")
+        fields = (
+            "id",
+            "name",
+            "company",
+            "weight",
+            "base_color",
+            "color_name",
+        )
         depth = 1
 
 
@@ -152,7 +163,8 @@ class CustomerYarnView(ViewSet):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
         try:
-            customer_yarn = CustomerYarn.objects.get(pk=pk, user=request.user)
+            customer = Customer.objects.get(user=request.user)
+            customer_yarn = CustomerYarn.objects.get(pk=pk, customer=customer)
         except CustomerYarn.DoesNotExist:
             return Response(
                 {"error": "Yarn not found in your stash"},
@@ -173,7 +185,8 @@ class CustomerYarnView(ViewSet):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
         try:
-            customer_yarn = CustomerYarn.objects.get(pk=pk, user=request.user)
+            customer = Customer.objects.get(user=request.user)
+            customer_yarn = CustomerYarn.objects.get(pk=pk, customer=customer)
             customer_yarn.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except CustomerYarn.DoesNotExist:
