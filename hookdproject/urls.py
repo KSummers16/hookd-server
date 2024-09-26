@@ -22,6 +22,7 @@ router.register(r"cart", CartView, "cart")
 # router.register(r"payments", create_payment, "payments")
 router.register(r"cusrequests", CusRequestView, "cusrequests")
 router.register(r"masteryarns", MasterYarnView, "masteryarns")
+router.register(r"customeryarns", CustomerYarnView, "customeryarns")
 router.register(r"weights", WeightsView, "weights")
 router.register("companys", CompanyView, "companys")
 

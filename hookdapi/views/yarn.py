@@ -4,15 +4,14 @@ from rest_framework import serializers
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
     IsAdminUser,
     IsAuthenticated,
 )
-from hookdapi.models import (
-    MasterYarn,
-    CustomerYarn,
-)
+from hookdapi.models import MasterYarn, CustomerYarn, Customer
 
 
 class MasterYarnSerializer(serializers.ModelSerializer):
@@ -101,7 +100,7 @@ class CustomerYarnSerializer(serializers.ModelSerializer):
             "amount",
             "is_custom",
         ]
-        read_only_fields = ["user", "is_custom"]
+        read_only_fields = ["customer", "is_custom"]
 
 
 class CustomerYarnView(ViewSet):
@@ -109,15 +108,16 @@ class CustomerYarnView(ViewSet):
     permission_classes = [IsAuthenticated]
 
     def list(self, request):
-        customer_yarns = CustomerYarn.objects.filter(user=request.user)
+        customer = Customer.objects.get(user=request.user)
+        customer_yarn = CustomerYarn.objects.filter(customer=customer)
         serializer = CustomerYarnSerializer(
-            customer_yarns, many=True, context={"request": request}
+            customer_yarn, many=True, context={"request": request}
         )
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         try:
-            customer_yarn = CustomerYarn.objects.get(pk=pk, user=request.user)
+            customer_yarn = CustomerYarn.objects.get(pk=pk, customer__user=request.user)
             serializer = CustomerYarnSerializer(
                 customer_yarn, context={"request": request}
             )
@@ -139,7 +139,9 @@ class CustomerYarnView(ViewSet):
             data=request.data, context={"request": request}
         )
         if serializer.is_valid():
-            serializer.save(user=request.user, is_custom=True)
+            serializer.save(
+                customer=Customer.objects.get(user=request.user), is_custom=True
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -187,6 +189,15 @@ class CustomerYarnView(ViewSet):
                 {"error": "Authentication is required."},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
+
+        try:
+            customer = Customer.objects.get(user=request.user)
+        except Customer.DoesNotExist:
+            return Response(
+                {"error": "Customer not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
         master_yarn_id = request.data.get("master_yarn_id")
         amount = request.data.get("amount", 0)
 
@@ -198,7 +209,7 @@ class CustomerYarnView(ViewSet):
             )
 
         customer_yarn, created = CustomerYarn.objects.get_or_create(
-            user=request.user,
+            customer=customer,
             master_yarn=master_yarn,
             defaults={
                 "name": master_yarn.name,

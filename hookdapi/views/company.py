@@ -21,16 +21,14 @@ class CompanyView(viewsets.ViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def list(self, request):
-        companys = Company.objects.all()
-        serializer = CompanySerializer(
-            companys, many=True, context={"request": request}
-        )
+        company = Company.objects.all()
+        serializer = CompanySerializer(company, many=True, context={"request": request})
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         try:
-            companys = Company.objects.get(pk=pk)
-            serializer = CompanySerializer(companys, context={"request": request})
+            company = Company.objects.get(pk=pk)
+            serializer = CompanySerializer(company, context={"request": request})
             return Response(serializer.data)
         except Company.DoesNotExist:
             return ResourceWarning(status=status.HTTP_404_NOT_FOUND)

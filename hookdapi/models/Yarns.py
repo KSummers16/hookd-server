@@ -26,7 +26,7 @@ class CustomerYarn(models.Model):
     base_color = models.ForeignKey(Color, on_delete=models.CASCADE)
     color_name = models.CharField(max_length=100)
     amount = models.PositiveIntegerField(default=0)
-    user = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     is_custom = models.BooleanField(default=False)
 
     def __str__(self):
